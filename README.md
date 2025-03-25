@@ -62,6 +62,29 @@ The measured test accuracy of the TensorFlow model is 67.33%. That may be enough
 
 The app is pretty straightforward: you need to load a song, then you can upload a LAB file to visualize its chord labels. You may use the `autochord` Python library for generating this file. Optionally, you may load another LAB file for comparison (e.g. ground-truth labels, LAB file from another model's prediction).
 
+## Docker Usage
+
+To use `autochord` with Docker, you can build and run the container as follows:
+
+### Build the Docker Image
+Run the following command to build the Docker image:
+```
+docker build -t autochord .
+```
+
+### Running Autochord in a Container
+To analyze an audio file using `autochord` inside a Docker container, mount the file and run:
+```
+docker run --rm -v "$(pwd)/song.mp3:/audio.wav" autochord python -c "import autochord; print(autochord.recognize('/audio.wav', lab_fn='chords.lab'))"
+```
+Replace `song.mp3` with the actual path to your audio file.
+
+### Notes on Docker Setup
+- The Docker image uses `python:3.8-slim` as the base image.
+- System dependencies such as `ffmpeg`, `gcc`, `g++`, and `make` are installed.
+- The `autochord` package is installed along with its dependencies.
+- TensorFlow might give warnings about CUDA drivers if you are not using a GPU. These warnings can be ignored if you intend to run on CPU.
+
 ## Future Improvements
 
 - Integrate everything into a full chord recognition app! For that we need to:
